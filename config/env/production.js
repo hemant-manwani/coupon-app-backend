@@ -43,6 +43,5 @@ module.exports = {
   },
   models: {
     connection: 'serverDb'
-  } 
-
+  }
 };
