@@ -29,12 +29,13 @@
 
 module.exports.policies = {
 
-  '*': ['isAuthorized'], // Everything resctricted here
+  '*': ['isAuthorized'],
+
   'UserController': {
-    'create': true // We dont need authorization here, allowing public access
+    'create': true
   },
 
   'AuthController': {
-    '*': true // We dont need authorization here, allowing public access
+    '*': true
   }
 };
