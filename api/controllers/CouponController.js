@@ -45,7 +45,7 @@ module.exports = {
         var db_coupon_ids = _.map(db_coupons, "coupon_id");
         var coupons = stripe_coupons.data.map(function(coupon){
           if(db_coupon_ids.indexOf(coupon.id)!==-1)
-            coupon.can_delete = true;
+            coupon.user_id = user_id;
           return coupon;
         });
         stripe_coupons.data = coupons;
