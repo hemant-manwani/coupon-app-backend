@@ -52,5 +52,18 @@ module.exports = {
         res.json(200, {coupons: coupons});
       });
     });
-  }
+  },
+
+  destroy: function(req, res){
+      stripe.coupons.del(req.param("id"))
+      .then(function(data){
+        Coupon.destroy({coupon_id: req.param("id")}).exec((err, data)=>{
+          if (err) return res.json(200, {err: err});
+          res.json(200, {message: "coupon deleted successfuly"});
+        });
+      })
+      .catch(function(err){
+        if (err) return res.json(200, {err: err});
+      })
+    }
 };
