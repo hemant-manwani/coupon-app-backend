@@ -18,5 +18,17 @@ module.exports = {
         res.json(200, {user: user, token: jwToken.issue({id: user.id})});
       }
     });
+  },
+
+  me: function(req, res){
+    if (!req.param('id')) {
+      return res.json(404, {err: "user id not available"});
+    }
+    User.findOne({
+     where : {id : req.param('id')}
+    }).exec((err,user)=> {
+      if(err) return res.json(404, {err: "user not found"});
+      return res.json(200, {user: user});
+    });
   }
 };
