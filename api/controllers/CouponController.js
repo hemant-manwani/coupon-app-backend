@@ -26,5 +26,31 @@ module.exports = {
       });
     });
 
+  },
+
+  find: function(req, res){
+    user_id = req.param("user_id");
+    var data = {
+      limit: req.param("limit"),
+      ending_before: req.param("ending_before"),
+      starting_after: req.param("starting_after"),
+      "include[]": "total_count"
+    };
+    stripe.coupons.list(data, function(err, stripe_coupons) {
+      var coupon_ids = _.map(stripe_coupons.data, "id");
+      Coupon.find({
+        where : {user_id : user_id, coupon_id: coupon_ids}
+      }).exec((err, db_coupons)=> {
+        if (err) return res.json(200, {err: err});
+        var db_coupon_ids = _.map(db_coupons, "coupon_id");
+        var coupons = stripe_coupons.data.map(function(coupon){
+          if(db_coupon_ids.indexOf(coupon.id)!==-1)
+            coupon.can_delete = true;
+          return coupon;
+        });
+        stripe_coupons.data = coupons;
+        res.json(200, {coupons: coupons});
+      });
+    });
   }
 };
