@@ -1,34 +1,34 @@
-	/**
-	* Users.js
-	*
-	* @description :: Coupon schema and model functions.
-	* @docs        :: http://sailsjs.org/#!documentation/models
-	*/
+/**
+ * Users.js
+ *
+ * @description :: Coupon schema and model functions.
+ * @docs        :: http://sailsjs.org/#!documentation/models
+ */
+var _ = require('lodash');
 
-	var _ = require('lodash');
+module.exports = {
+  schema: true,
 
-	module.exports = {
-		schema: true,
+  attributes: {
+    id: {
+      type: 'string'
+    },
+    coupon_id: {
+      type: 'string'
+    },
+    user_id: {
+      type: 'string'
+    }
+  },
 
-		attributes: {
-			id:{
-				type: 'string'
-			},
-			coupon_id: {
-				type: 'string'
-			},
-			user_id: {
-				type: 'string'
-			}
-		},
-
-		parseCoupon: function(coupon){
-			var data = _.clone(coupon, true);
-			var fields = ["amount_off", "duration_in_months", "max_redemptions", "percent_off"];
-			for(var x = 0; x < fields.length; x++){
-				if(coupon[fields[x]] != undefined)
-				data[fields[x]] = parseInt(coupon[fields[x]]);
-			}
-			return data;
-		}
-	};
+  parseCoupon: function(coupon) {
+    var data = _.clone(coupon, true);
+    var fields = ["amount_off", "duration_in_months", "max_redemptions", "percent_off"];
+    for (var x = 0; x < fields.length; x++) {
+      if (coupon[fields[x]] != undefined) {
+        data[fields[x]] = parseInt(coupon[fields[x]]);
+      }
+    }
+    return data;
+  }
+};
