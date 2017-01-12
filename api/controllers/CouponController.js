@@ -9,7 +9,6 @@ var _ = require('lodash');
 const stripe = require("stripe")(sails.config.stripe.secret_key);
 
 module.exports = {
-
   create: function(req, res){
     var coupon_data = Coupon.parseCoupon(req.body);
     if (typeof(req.user_id) == "undefined")
@@ -18,22 +17,27 @@ module.exports = {
     var user_id = req.user_id;
 
     stripe.coupons.create(coupon_data, function(stripe_err, stripe_coupon) {
-      if(stripe_err) return res.json(200, {err: stripe_err});
+      if(stripe_err){
+        return res.json(200, {err: stripe_err});
+      }
       new_coupon = {user_id: user_id, coupon_id: stripe_coupon.id}
 
       Coupon.create(new_coupon).exec(function (err, coupon) {
-        if (err) return res.json(200, {err: err});
-        if (coupon) res.json(200, {coupon: coupon});
+        if(err){
+          return res.json(200, {err: err});
+        }
+        if(coupon){
+          res.json(200, {coupon: stripe_coupon});
+        }
       });
     });
 
   },
 
   find: function(req, res){
-
-    if (typeof(req.user_id) == "undefined")
+    if(typeof(req.user_id) == "undefined"){
       return res.json(200, {err: "invalid request"});
-
+    }
     var user_id = req.user_id;
 
     var data = {
@@ -47,7 +51,9 @@ module.exports = {
       Coupon.find({
         where : {user_id : user_id, coupon_id: coupon_ids}
       }).exec((err, db_coupons)=> {
-        if (err) return res.json(200, {err: err});
+        if (err){
+          return res.json(200, {err: err});
+        }
         var db_coupon_ids = _.map(db_coupons, "coupon_id");
         var coupons = stripe_coupons.data.map(function(coupon){
           if(db_coupon_ids.indexOf(coupon.id)!==-1)
@@ -61,15 +67,29 @@ module.exports = {
   },
 
   destroy: function(req, res){
-      stripe.coupons.del(req.param("id"))
-      .then(function(data){
-        Coupon.destroy({coupon_id: req.param("id")}).exec((err, data)=>{
-          if (err) return res.json(200, {err: err});
-          res.json(200, {message: "coupon deleted successfuly"});
-        });
-      })
-      .catch(function(err){
-        if (err) return res.json(200, {err: err});
-      })
-    }
+    Coupon.findOne({
+      where : {user_id : req.user_id, coupon_id: req.param("id")}
+    }).exec((err, db_coupon)=> {
+      if(err){
+        res.json(200, {err: err});
+      }else if(db_coupon.coupon_id == req.param('id')){
+        stripe.coupons.del(req.param("id"))
+        .then(function(data){
+          Coupon.destroy({coupon_id: req.param("id")}).exec((err, data)=>{
+            if(err){
+              return res.json(200, {err: err});
+            }
+            res.json(200, {message: "coupon deleted successfuly"});
+          });
+        })
+        .catch(function(err){
+          if(err){
+            return res.json(200, {err: err});
+          }
+        })
+      }else{
+        res.json(200, {err: {message: "unauthenticated request"}});
+      }
+    });
+  }
 };
