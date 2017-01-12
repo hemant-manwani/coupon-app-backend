@@ -38,7 +38,7 @@ module.exports = {
   connections : {
     serverDb: {
       adapter: 'sails-mongo',
-      url: 'mongodb://heroku_12345678:random_password@ds029017.mLab.com:29017/heroku_12345678'
+      url: process.env.MONGO_CONNECTION
     }
   },
   models: {
