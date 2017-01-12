@@ -11,10 +11,11 @@ const stripe = require("stripe")(sails.config.stripe.secret_key);
 module.exports = {
 
   create: function(req, res){
-    var coupon_data = Coupon.parseCoupon(req.body), user_id;
-    if(!(user_id = coupon_data.user_id))
-      return res.json(200, {err: "please send customer_id in coupon metadata"});
-    delete coupon_data.user_id;
+    var coupon_data = Coupon.parseCoupon(req.body);
+    if (typeof(req.user_id) == "undefined")
+      return res.json(200, {err: "invalid request"});
+
+    var user_id = req.user_id;
 
     stripe.coupons.create(coupon_data, function(stripe_err, stripe_coupon) {
       if(stripe_err) return res.json(200, {err: stripe_err});
@@ -29,7 +30,12 @@ module.exports = {
   },
 
   find: function(req, res){
-    user_id = req.param("user_id");
+
+    if (typeof(req.user_id) == "undefined")
+      return res.json(200, {err: "invalid request"});
+
+    var user_id = req.user_id;
+
     var data = {
       limit: req.param("limit"),
       ending_before: req.param("ending_before"),

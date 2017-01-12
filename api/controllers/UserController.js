@@ -21,11 +21,11 @@ module.exports = {
   },
 
   me: function(req, res){
-    if (!req.param('user_id')) {
+    if (typeof(req.user_id) == "undefined") {
       return res.json(404, {err: "user id not available"});
     }
     User.findOne({
-     where : {id : req.param('user_id')}
+     where : {id : req.user_id}
     }).exec((err,user)=> {
       if(err) return res.json(404, {err: "user not found"});
       return res.json(200, {user: user});
