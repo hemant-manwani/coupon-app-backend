@@ -2,13 +2,18 @@
  * CouponsController
  *
  * @description :: Server-side logic for managing coupons
- * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
+ * This Controller fetch the coupons from the api and provide list to requested user
  */
 
 var _ = require('lodash');
 const stripe = require("stripe")(sails.config.stripe.secret_key);
 
 module.exports = {
+
+  /** 
+  * Method to create new coupon in db and on stripe account as well
+  *
+  */
   create: function(req, res){
     var coupon_data = Coupon.parseCoupon(req.body);
 

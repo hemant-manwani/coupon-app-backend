@@ -2,9 +2,13 @@
  * UserController
  *
  * @description :: Server-side logic for managing user
- * @help        :: See http://links.sailsjs.org/docs/controllers
+ * @API CALL        :: api/v1/user
+ * @parma{String} email 
+ * @parma{String} password 
+ * @parma{String} confirm_password
+ * 
  */
-
+var _ = require('lodash');
 module.exports = {
   create: function (req, res) {
     if(req.body.password !== req.body.confirm_password){
