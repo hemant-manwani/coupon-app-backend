@@ -7,14 +7,14 @@
 
 module.exports = {
   create: function (req, res) {
-    if (req.body.password !== req.body.confirm_password) {
+    if(req.body.password !== req.body.confirm_password){
       return res.json(401, {err: 'password does not matches'});
     }
     User.create(req.body).exec(function (err, user) {
-      if (err) {
+      if(err){
         return res.json(err.status, {err: err});
       }
-      if (user) {
+      if(user){
         res.json(200, {user: user, token: jwToken.issue({id: user.id})});
       }
     });

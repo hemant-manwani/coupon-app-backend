@@ -13,15 +13,15 @@ module.exports = {
 
 	attributes: {
 	    id:{
-	      type: 'string'
+				type: 'string'
       },
-			coupon_id: {
-				type: 'string',
-			},
-	    user_id: {
-				type: 'string',
-			}
-	},
+      coupon_id: {
+        type: 'string'
+      },
+      user_id: {
+        type: 'string'
+      }
+   },
 
 	parseCoupon: function(coupon){
 		var data = _.clone(coupon, true);
