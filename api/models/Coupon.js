@@ -18,33 +18,9 @@ module.exports = {
 			coupon_id: {
 				type: 'string',
 			},
-	    duration: {
-        type: 'string',
-			},
-      amount_off:{
-        type: 'number'
-      },
-      currency:{
-        type: 'string'
-      },
-      duration_in_months:{
-        type: 'number'
-      },
-      max_redemptions:{
-        type: 'number'
-      },
-      metadata: {
-        type: 'object',
-      },
-			user_id: {
+	    user_id: {
 				type: 'string',
-			},
-      percent_off: {
-        type: 'number'
-      },
-      redeem_by: {
-        type: 'string'
-      }
+			}
 	},
 
 	parseCoupon: function(coupon){
