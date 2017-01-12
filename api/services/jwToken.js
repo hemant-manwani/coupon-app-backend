@@ -14,7 +14,7 @@ module.exports.issue = function(payload) {
     payload,
     tokenSecret,
     {
-      expiresIn : 180
+      expiresIn : 172800
     }
   );
 };
