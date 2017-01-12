@@ -28,23 +28,29 @@ module.exports = {
 
   beforeCreate : function (values, next) {
     bcrypt.genSalt(10, function (err, salt) {
-      if(err) return next(err);
+      if(err){
+        return next(err);
+      }
       bcrypt.hash(values.password, salt, function (err, hash) {
-        if(err) return next(err);
+        if(err){
+          return next(err);
+        }
         values.encrypted_password = hash;
         next();
       })
     })
   },
 
-  comparePassword : function (password, user, cb) {
+  comparePassword : function (password, user, callback) {
     bcrypt.compare(password, user.encrypted_password, function (err, match) {
-      if(err) cb(err);
-      if(match) {
+      if(err){
+        callback(err);
+      }
+      if(match){
       	console.log('fields are matched');
-        cb(null, true);
+        callback(null, true);
       } else {
-        cb(err);
+        callback(err);
       }
     })
   }
