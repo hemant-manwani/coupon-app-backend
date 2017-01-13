@@ -31,8 +31,11 @@ module.exports = function (req, res, next) {
     if (err){
       return res.json(401, {err: 'Invalid Token!'});
     }
-    if(typeof (token.id) != "undefined")
+    if(typeof (token.id) != "undefined"){
       req.user_id = token.id;
+    }else{
+      return res.json(401, {err: 'No Authorization header was found'});
+    }
     req.token = token;
     next();
   });
