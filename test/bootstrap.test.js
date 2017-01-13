@@ -9,7 +9,7 @@ before(function (done) {
       level: 'error'
     },
     models: {
-      connection: 'test',
+      connection: 'mongoTestConnection',
       migrate: 'drop'
     }
   }, function(err, sails) {
@@ -24,7 +24,6 @@ before(function (done) {
 
     // Populate the DB
 
-    console.log(fixtures);
     barrels.populate(function(err) {
       done(err, sails);
     });
