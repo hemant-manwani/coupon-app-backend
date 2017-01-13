@@ -2,7 +2,6 @@
  * Users.js
  *
  * @description :: Coupon schema and model functions.
- * @docs        :: http://sailsjs.org/#!documentation/models
  */
 var _ = require('lodash');
 

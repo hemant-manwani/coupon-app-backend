@@ -2,7 +2,6 @@
  * jwToken
  *
  * @description :: JSON Webtoken Service for sails
- * @help        :: See https://github.com/auth0/node-jsonwebtoken & http://sailsjs.org/#!/documentation/concepts/Services
  */
 
 var
