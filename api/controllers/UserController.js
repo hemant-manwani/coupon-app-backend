@@ -10,9 +10,13 @@ module.exports = {
     if(req.body.password !== req.body.confirm_password){
       return res.json(401, {err: 'password does not matches'});
     }
-    User.create(req.body).exec(function (err, user) {
+    var data = {
+      email: req.body.email,
+      password: req.body.password
+    };
+    User.create(data).exec(function (err, user) {
       if(err){
-        return res.json(err.status, {err: err});
+        return res.json(err.status, {err: {"message": "unable to create user"}});
       }
       if(user){
         res.json(200, {user: user, token: jwToken.issue({id: user.id})});
@@ -21,12 +25,9 @@ module.exports = {
   },
 
   me: function(req, res){
-    if(typeof(req.user_id) == "undefined"){
-      return res.json(404, {err: "user id not available"});
-    }
     User.findOne({
      where : {id : req.user_id}
-    }).exec((err,user)=> {
+    }).exec((err, user)=> {
       if(err){
         return res.json(404, {err: "user not found"});
       }
