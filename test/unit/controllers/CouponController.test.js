@@ -1,6 +1,6 @@
 var request = require('supertest');
 
-describe('Coupong Controller', function() {
+describe('Coupon Controller', function() {
 
   var user = {"email": "dilipchouhan153@gmail.com", "password": "dilip"};
   var token;
