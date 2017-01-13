@@ -72,7 +72,7 @@ module.exports = {
     }).exec((err, db_coupon)=> {
       if(err){
         res.json(200, {err: err});
-      }else if(db_coupon.coupon_id == req.param('id')){
+      }else if(db_coupon != null && db_coupon.coupon_id == req.param('id')){
         stripe.coupons.del(req.param("id"))
         .then(function(data){
           Coupon.destroy({coupon_id: req.param("id")}).exec((err, data)=>{
