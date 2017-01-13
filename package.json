@@ -5,6 +5,7 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "barrels": "^1.6.4",
     "bcrypt-nodejs": "0.0.3",
     "ejs": "2.3.4",
     "grunt": "1.0.1",
@@ -22,15 +23,20 @@
     "include-all": "^1.0.0",
     "jsonwebtoken": "^7.2.1",
     "lodash": "^4.17.4",
+    "mocha": "^3.2.0",
     "rc": "1.0.1",
     "sails": "~0.12.11",
     "sails-disk": "~0.10.9",
+    "sails-memory": "^0.10.7",
     "sails-mongo": "^0.12.2",
-    "stripe": "^4.14.0"
+    "should": "^11.1.2",
+    "stripe": "^4.14.0",
+    "supertest": "^2.0.1"
   },
   "scripts": {
     "debug": "node debug app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "PORT=9999 NODE_ENV=test mocha -R spec -b --recursive"
   },
   "main": "app.js",
   "repository": {
@@ -38,5 +44,8 @@
     "url": "git://github.com/rails/stripe-coupon.git"
   },
   "author": "rails",
-  "license": ""
+  "license": "",
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
 }
