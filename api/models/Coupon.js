@@ -9,9 +9,6 @@ module.exports = {
   schema: true,
 
   attributes: {
-    id: {
-      type: 'string'
-    },
     coupon_id: {
       type: 'string'
     },

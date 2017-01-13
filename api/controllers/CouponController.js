@@ -10,7 +10,7 @@ const stripe = require("stripe")(sails.config.stripe.secret_key);
 
 module.exports = {
 
-  /** 
+  /**
   * API to create new coupon in db and on stripe account as well
   *
   */
@@ -47,7 +47,7 @@ module.exports = {
       "include[]": "total_count"
     };
     stripe.coupons.list(data, function(err, stripe_coupons) {
-      var coupon_ids = _.map(stripe_coupons.data, "id");
+      var coupon_ids = _.map(stripe_coupons.data, "id") || [];
       Coupon.find({
         where : {user_id : user_id, coupon_id: coupon_ids}
       }).exec((err, db_coupons)=> {
@@ -62,13 +62,13 @@ module.exports = {
           return coupon;
         });
         stripe_coupons.data = coupons;
-        res.json(200, {coupons: coupons});
+        res.json(200, {success: true, coupons: coupons});
       });
     });
   },
 
   destroy: function(req, res){
-    Coupon.findOne({
+    Coupon.find({
       where : {user_id : req.user_id, coupon_id: req.param("id")}
     }).exec((err, db_coupon)=> {
       if(err){
