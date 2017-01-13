@@ -21,7 +21,7 @@ module.exports = {
 
     stripe.coupons.create(coupon_data, function(stripe_err, stripe_coupon) {
       if(stripe_err){
-        return res.json(200, {success: false, message: "unable to create coupon on stripe"});
+        return res.json(200, {success: false, message: stripe_err.message});
       }
       new_coupon = {user_id: user_id, coupon_id: stripe_coupon.id}
 
