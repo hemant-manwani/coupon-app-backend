@@ -1,15 +1,15 @@
 /**
  * AuthController
  *
- * @description :: Controller created to manage user login 
+ * @description :: Controller created to manage user login
  */
 
 module.exports = {
   /**
   * @API CALL :: api/v1/auth/login
   *
-  * @parma{String} email 
-  * @parma{String} password 
+  * @param{String} email
+  * @param{String} password
   * return user details object along with token
   */
   login: function (req, res) {
@@ -17,24 +17,24 @@ module.exports = {
     var password = req.param('password');
 
     if (!email || !password){
-      return res.json(401, {err: 'Email and password required'});
+      return res.json(401, {success: false, message: 'Email and password required'});
     }
-
-    User.findOne({email: email}, function (err, user) {
-      if (!user){
-        return res.json(401, {err: 'Invalid email or password'});
+    User.findOne({email: email}, function (error, user){
+      if(!user){
+        return res.json(401, {success: false, message: 'Invalid email or password'});
       }
 
-      User.comparePassword(password, user, function (err, valid) {
-        if(err){
-          return res.json(403, {err: 'Forbidden'});
+      User.comparePassword(password, user, function (error, valid){
+        if(error){
+          return res.json(403, {success: false, message: 'Forbidden'});
         }
-        if(!valid) {
-          return res.json(401, {err: 'Invalid email or password'});
+        if(!valid){
+          return res.json(401, {success: false, message: 'Invalid email or password'});
         }else{
           res.json({
+            success: true,
             user: user,
-            token: jwToken.issue({id : user.id })
+            token: jwToken.issue({id : user.id})
           });
         }
       });

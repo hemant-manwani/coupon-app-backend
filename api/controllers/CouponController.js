@@ -2,7 +2,7 @@
  * CouponsController
  *
  * @description :: Server-side logic for managing coupons
- * This Controller fetch the coupons from the api and provide list to requested user
+ * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
 var _ = require('lodash');
@@ -19,30 +19,24 @@ module.exports = {
 
     var user_id = req.user_id;
 
-    // Call stripe action to create coupon on stripe
     stripe.coupons.create(coupon_data, function(stripe_err, stripe_coupon) {
       if(stripe_err){
-        return res.json(200, {err: {"message": "Unable to create coupon on stripe"}});
+        return res.json(200, {success: false, message: "unable to create coupon on stripe"});
       }
       new_coupon = {user_id: user_id, coupon_id: stripe_coupon.id}
 
       Coupon.create(new_coupon).exec(function (err, coupon) {
         if(err){
-          return res.json(200, {err: {"message":"Unable to create coupon"}});
+          return res.json(200, {success: false, message: "unable to create coupon"});
         }
         if(coupon){
-          res.json(200, {coupon: stripe_coupon});
+          res.json(200, {success: true, message: 'Coupon created successfully', coupon: stripe_coupon});
         }
       });
     });
 
   },
 
-  /** 
-  * API to fetch all the coupons list 
-  * Coupons list is created using stripe coupons and existing db coupons
-  *
-  */
   find: function(req, res){
     var user_id = req.user_id;
 
@@ -52,15 +46,13 @@ module.exports = {
       starting_after: req.param("starting_after"),
       "include[]": "total_count"
     };
-
-    // Call stripe action to get the list of coupons
     stripe.coupons.list(data, function(err, stripe_coupons) {
       var coupon_ids = _.map(stripe_coupons.data, "id");
       Coupon.find({
         where : {user_id : user_id, coupon_id: coupon_ids}
       }).exec((err, db_coupons)=> {
         if (err){
-          return res.json(200, {err: {"message": "Unable to find coupons for the logged in user"}});
+          return res.json(200, {success: false, message: "unable to find coupons for the logged in user"});
         }
         var db_coupon_ids = _.map(db_coupons, "coupon_id");
         var coupons = stripe_coupons.data || [];
@@ -75,34 +67,29 @@ module.exports = {
     });
   },
 
-  /** 
-  * API to remove the delete the coupon from db and stripe
-  *
-  * Coupons can be deleted only by those users who have created the coupon
-  */
   destroy: function(req, res){
     Coupon.findOne({
       where : {user_id : req.user_id, coupon_id: req.param("id")}
     }).exec((err, db_coupon)=> {
       if(err){
-        res.json(200, {err: {"message": "Coupon with id " + req.param("id") + "was not found"}});
+        res.json(200, {success: false, message: "coupon with id " + req.param("id") + " was not found"});
       }else if(db_coupon != null){
         stripe.coupons.del(req.param("id"))
         .then(function(data){
           Coupon.destroy({coupon_id: req.param("id")}).exec((err, data)=>{
             if(err){
-              return res.json(200, {err: {"message": "Unable to delete coupon"}});
+              return res.json(200, {success: false, message: "unable to delete coupon"});
             }
-            res.json(200, {message: "Coupon deleted successfuly"});
+            res.json(200, {success: true, message: "coupon deleted successfuly"});
           });
         })
         .catch(function(err){
           if(err){
-            return res.json(200, {err: {"message": "Unable to delete coupon on stripe"}});
+            return res.json(200, {success: false, message: "unable to delete coupon on stripe"});
           }
         })
       }else{
-        res.json(200, {err: {message: "You are not authorized to delete this coupon"}});
+        res.json(200, {success: false, message: "you are not authorized to delete this coupon"});
       }
     });
   }

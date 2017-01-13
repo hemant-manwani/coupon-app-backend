@@ -32,7 +32,7 @@ module.exports.policies = {
   '*': ['isAuthorized'],
 
   'UserController': {
-    'create': true
+    'create': 'createUser'
   },
 
   'AuthController': {

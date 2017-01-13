@@ -24,7 +24,7 @@ before(function (done) {
 
     // Populate the DB
 
-    console.log(fixtures);  
+    console.log(fixtures);
     barrels.populate(function(err) {
       done(err, sails);
     });
